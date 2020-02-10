@@ -135,7 +135,7 @@ class StartDroid extends Command
     }
 
     /**
-     * Cheat a bit and check where we should be going
+     * Cheat a bit and check where we should be going using the string of the map
      *
      * @param string $map
      * @return void
@@ -167,15 +167,12 @@ class StartDroid extends Command
         // Usually this will be forward
         $this->path = substr($this->path, 0, -1);
 
-        // Get the current position we are at
+        // Get the current position we are at with regex
         preg_match_all('/(\d*)(?:,)(\d*)/m', $message, $coords, PREG_SET_ORDER, 0);
 
         if (!empty($coords[0])) {
             // Go to current X row in array
             $currentRow = $this->map[$coords[0][1]];
-
-            // Check if a space next to us on either side is empty, if so set the direction to the empty space
-            // $eitherSide = array_slice($currentRow, $coords[1] - 1, 3);
 
             // Check if the closest space is greater than or less than the current index on the Y axis
             // If there is no room to move, try forward
