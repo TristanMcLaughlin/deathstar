@@ -96,15 +96,21 @@ class StartDroid extends Command
             $done = $this->tryPath();
 
             if ($done) {
-                $this->info($this->path);
+                $this->success('This droid made it');
+                $this->success($this->path);
                 break;
             }
         }
     }
 
+    /**
+     * Try to hi tthe target with the current path
+     *
+     * @return boolean
+     */
     public function tryPath () 
     {
-        $this->info('Trying path ' . $this->path);
+        // $this->info('Trying path ' . $this->path);
 
         try {
 
@@ -139,6 +145,12 @@ class StartDroid extends Command
         return true;
     }
 
+    /**
+     * Cheat a bit and check where we should be going
+     *
+     * @param string $map
+     * @return void
+     */
     public function setMap ($map) 
     {
         $mapArray = [];
@@ -155,6 +167,13 @@ class StartDroid extends Command
         $this->info($map);
     }
 
+    /**
+     * Whenever the droid crashes we will use the old path from the previous run
+     * And send a new one on a path which leads a slightly different way
+     *
+     * @param string $message
+     * @return void
+     */
     public function setNewPath ($message)
     {
         // We have crashed, so we need to move the last direction from the string
