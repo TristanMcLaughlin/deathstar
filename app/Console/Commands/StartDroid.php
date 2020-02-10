@@ -45,13 +45,6 @@ class StartDroid extends Command
     protected $path = 'f';
 
     /**
-     * Set default direction to right
-     *
-     * @var string
-     */
-    protected $direction = 'f';
-
-    /**
      * Create a new command instance.
      *
      * @return void
