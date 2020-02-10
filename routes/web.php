@@ -15,4 +15,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('map', 'MapController@map');
+Route::get('map', 'MapController@map');
