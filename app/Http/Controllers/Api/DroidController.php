@@ -14,6 +14,11 @@ class DroidController extends Controller
      */
     public function start ()
     {
+        // Save the currently explored map line as an item in the DB with co-ords X and Y
+        // Then set off aiming for the next square.
+
+        $path = Path::all();
+
         
     }
 }

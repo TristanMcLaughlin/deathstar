@@ -49,17 +49,17 @@ class MapController extends Controller {
 
             // If the droid crashes, return a 417 response
             if ($map[$x][$y] == 0) {
-                abort(417);
+                return response()->json(['map' => $map[$x]])->setStatusCode(417);
             } 
         }
 
         // Keep going until we run out of string or 2 is reached
         if ($map[$x][$y] == 2) {
             // If we reach the end, return 200
-            return response(200);
+            return response()->json(['map' => $map])->setStatusCode(417)
         } elseif ($map[$x][$y] == 1) {
             // If there is still a way to go and the droid is stuck, return a 410
-            abort(410);
+            return response()->json(['map' => $map[$x]])->setStatusCode(410)
         }
 
     }
