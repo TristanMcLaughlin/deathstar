@@ -29,8 +29,28 @@ class StartDroid extends Command
      * @var null
      */
     protected $client = null;
+
+    /**
+     * Array of the current map we are looking at
+     *
+     * @var null
+     */
     protected $map = null;
+
+    /**
+     * String for the path we are taking
+     *
+     * @var string
+     */
     protected $path = 'f';
+
+    /**
+     * Set default direction to right
+     *
+     * @var string
+     */
+    protected $direction = 'f';
+
     /**
      * Create a new command instance.
      *
@@ -109,10 +129,11 @@ class StartDroid extends Command
                 // Empty space, add this to our model
                 $this->info('Droid has found empty space');
 
-                // Keep going forward if we have hit empty space
+                // Attempt to move forward
                 $this->path .= 'f';
                 $this->tryPath();
             }
+
         }
 
         return true;
@@ -129,23 +150,46 @@ class StartDroid extends Command
 
         $this->map = $mapArray;
 
-        $this->info(print_r($this->map));
+        $this->info($map);
     }
 
     public function setNewPath ($message)
     {
+        // We have crashed, so we need to move the last direction from the string
+        // Usually this will be forward
+        $this->path = substr($this->path, 0, -1);
+
         // Get the current position we are at
         preg_match_all('/(\d*)(?:,)(\d*)/m', $message, $coords, PREG_SET_ORDER, 0);
 
+        $this->info(print_r($coords));
+
         if (!empty($coords)) {
             // Go to current X row in array
-            $currentRow = $this->map[$coords[0]];
-            // Check if a space next to us on either side is empty, if so set the direction to the empty space
+            $currentRow = $this->map[$coords[1]];
 
+            // Check if a space next to us on either side is empty, if so set the direction to the empty space
+            $eitherSide = array_slice($currentRow, $coords[1] - 1, 3);
+
+            // Check if the closest space is greater than or less than the current index on the Y axis
+            // If there is no room to move, try forward
             foreach ($currentRow as $index => $column) {
-                // Check if the closest space is greater than or less than the current index on the Y axis
-                
+                if ($column == ' ') {
+                    if ($index < $coords[2]) {
+                        $this->path .= 'r';
+                    } elseif($index > $coords[2]) {
+                        $this->path .= 'l';
+                    }
+
+                    $this->tryPath();
+                    break;
+
+                }
             }
+
+            // No spaces on either side
+            $this->path .= 'f';
+            $this->tryPath();
         }
         
     }
