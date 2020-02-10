@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware('auth:api')->namespace('Api')->group(function () {
     Route::get('droid', 'DroidController@start');
 });
+
