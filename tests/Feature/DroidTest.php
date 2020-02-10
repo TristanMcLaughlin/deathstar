@@ -13,12 +13,21 @@ class DroidTest extends TestCase
      *
      * @return void
      */
-    public function testInitiateDroid()
+    public function testCrashInitiateDroid()
     {
-        $this->withoutExceptionHandling();
+        $response = $this->post('/map', [
+            'direction' => 'f'
+        ]);
 
-        $response = $this->getJson('/api/droid');
+        $response->assertStatus(417);
+    }
 
-        $response->assertStatus(200);
+    public function testEmptyInitiateDroid()
+    {
+        $response = $this->post('/map', [
+            'direction' => 'rfff'
+        ]);
+
+        $response->assertStatus(410);
     }
 }
