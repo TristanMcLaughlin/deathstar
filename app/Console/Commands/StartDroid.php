@@ -96,6 +96,7 @@ class StartDroid extends Command
             $done = $this->tryPath();
 
             if ($done) {
+                $this->info($this->path);
                 break;
             }
         }
@@ -120,7 +121,6 @@ class StartDroid extends Command
 
             $this->setMap($responseObj->map);
 
-            $this->info($e->getResponse()->getBody());
             // If crash go again but try different value for path
             if ($e->getResponse()->getStatusCode() == 417) {
                 $this->info('Droid has crashed');
@@ -142,10 +142,12 @@ class StartDroid extends Command
     public function setMap ($map) 
     {
         $mapArray = [];
-        $rows = explode('\n', $map);
+        $rows = explode(PHP_EOL, $map);
+
+        $this->info(print_r($rows));
 
         foreach ($rows as $index => $row) {
-            $mapArray[$index] = str_split($row);
+            $mapArray[] = str_split($row);
         }
 
         $this->map = $mapArray;
@@ -162,23 +164,21 @@ class StartDroid extends Command
         // Get the current position we are at
         preg_match_all('/(\d*)(?:,)(\d*)/m', $message, $coords, PREG_SET_ORDER, 0);
 
-        $this->info(print_r($coords));
-
-        if (!empty($coords)) {
+        if (!empty($coords[0])) {
             // Go to current X row in array
-            $currentRow = $this->map[$coords[1]];
+            $currentRow = $this->map[$coords[0][1]];
 
             // Check if a space next to us on either side is empty, if so set the direction to the empty space
-            $eitherSide = array_slice($currentRow, $coords[1] - 1, 3);
+            // $eitherSide = array_slice($currentRow, $coords[1] - 1, 3);
 
             // Check if the closest space is greater than or less than the current index on the Y axis
             // If there is no room to move, try forward
             foreach ($currentRow as $index => $column) {
                 if ($column == ' ') {
-                    if ($index < $coords[2]) {
-                        $this->path .= 'r';
-                    } elseif($index > $coords[2]) {
+                    if ($index < $coords[0][2]) {
                         $this->path .= 'l';
+                    } elseif($index > $coords[0][2]) {
+                        $this->path .= 'r';
                     }
 
                     $this->tryPath();
