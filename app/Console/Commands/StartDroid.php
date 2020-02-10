@@ -75,10 +75,7 @@ class StartDroid extends Command
     {  
         $this->info('Dispatching droid');
  
-        $response = $this->sendApiRequest();
-
-        // Done!
-        $this->info('Done');
+        $this->sendApiRequest();
     }
 
     /**
@@ -155,8 +152,6 @@ class StartDroid extends Command
     {
         $mapArray = [];
         $rows = explode(PHP_EOL, $map);
-
-        $this->info(print_r($rows));
 
         foreach ($rows as $index => $row) {
             $mapArray[] = str_split($row);
