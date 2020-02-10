@@ -93,24 +93,23 @@ class StartDroid extends Command
             $done = $this->tryPath();
 
             if ($done) {
-                $this->success('This droid made it');
-                $this->success($this->path);
+                $this->line('This droid made it');
+                $this->line($this->path);
                 break;
             }
         }
     }
 
     /**
-     * Try to hi tthe target with the current path
+     * Try to hit the target with the current path
      *
      * @return boolean
      */
     public function tryPath () 
     {
-        // $this->info('Trying path ' . $this->path);
 
         try {
-
+            
             $response = $this->client->request('GET', 'http://deathstar.victoriaplum.com/alliance.php', [
                 'query' => [
                     'name' => 'becca',
@@ -126,7 +125,7 @@ class StartDroid extends Command
 
             // If crash go again but try different value for path
             if ($e->getResponse()->getStatusCode() == 417) {
-                $this->info('Droid has crashed');
+                $this->error('Droid has crashed');
                 $this->setNewPath($responseObj->message);
             } elseif ($e->getResponse()->getStatusCode() == 410) {
                 // Empty space, add this to our model
